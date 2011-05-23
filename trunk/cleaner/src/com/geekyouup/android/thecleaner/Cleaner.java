@@ -1,10 +1,13 @@
 package com.geekyouup.android.thecleaner;
 
+import java.lang.reflect.Method;
+
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -22,8 +25,13 @@ public class Cleaner extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
         mView = (RelativeLayout) findViewById(R.id.mainview);
         mView.setFocusableInTouchMode(false);
+
+        //hide system bar for honeycomb+ devices
+        setLightsOut(mView);
+        
         mWPM = WallpaperManager.getInstance(this);
         
         //ImageView launchImage = (ImageView) findViewById(R.id.exitImage);
@@ -90,4 +98,21 @@ public class Cleaner extends Activity {
     	}
     	return super.onTouchEvent(event);
     }
+    
+    //Reflection to allow Lights Out Mode (Hidden System Bar) on Honeycomb+ 
+    private void setLightsOut(View v)
+    {
+    	if(android.os.Build.VERSION.SDK_INT>=11)
+    	{
+	    	try
+	    	{
+	    		Class classView = Class.forName("android.view.View");
+		    	Method methodSetSystemUIVisibility = classView.getDeclaredMethod("setSystemUiVisibility", int.class);
+		    	methodSetSystemUIVisibility.invoke(v,1); //1 == View.STATUS_BAR_HIDDEN
+	    	}catch(Exception e)
+	    	{
+	    		Log.e("Cleaner","Failed setting lights out mode",e);
+	    	}
+    	}
+   }
 }
