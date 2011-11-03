@@ -27,7 +27,7 @@ public class Cleaner extends Activity {
         mView.setFocusableInTouchMode(false);
 
         //hide system bar for honeycomb+ devices
-    	if(android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) mView.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
+    	if(android.os.Build.VERSION.SDK_INT>=android.os.Build.VERSION_CODES.HONEYCOMB) mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
         mWPM = WallpaperManager.getInstance(this);
         
